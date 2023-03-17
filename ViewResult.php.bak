@@ -1,0 +1,167 @@
+<?php
+require('dbcon.php');
+
+// $id = $_REQUEST['id'];
+// $query = "SELECT * from class where Classid='" . $id . "'";
+// $result = mysqli_query($con, $query) or die(mysqli_error($con));
+// $row = mysqli_fetch_assoc($result);
+?>
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>View Records</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+	
+	
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+     // google.charts.load('current', {'packages':['bar']});
+     // google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+		  
+		  var Name1=document.getElementById("txtSearch").value;
+		  //$('#txtSearch').val();
+		  alert(Name1);
+		   document.cookie = "fbdata = " + Name1;
+            console.log(document.cookie);
+        var data = new google.visualization.arrayToDataTable([
+          ['Opening Move', 'Percentage'],
+		  
+		  
+         <?php
+		
+		 
+		if(isset($_COOKIE['fbdata'])) { 
+		
+		$marks = $_COOKIE['fbdata'];
+		
+          $sql = "SELECT * FROM exam_details ";
+		  //"Select * from exam_details where Name='".$marks."'";
+          $fire = mysqli_query($con,$sql);
+          while ($result = mysqli_fetch_assoc($fire)) {
+          echo"['".$result['Name']."',".$result['Marks']."],";
+           }
+		}
+         ?>
+		 ['Total', '10']
+        ]);
+  var options = {
+          title: 'Chess opening moves',
+          width: 900,
+          legend: { position: 'none' },
+          chart: { title: 'Chess opening moves',
+                   subtitle: 'popularity by percentage' },
+          bars: 'horizontal', // Required for Material Bar Charts.
+          axes: {
+            x: {
+              0: { side: 'top', label: 'Percentage'} // Top x-axis.
+            }
+          },
+          bar: { groupWidth: "90%" }
+        };
+	 
+       
+
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        chart.draw(data, options);
+      };
+	  function fun() {  
+alert("Welcome to the javaTpoint.com"); 
+ google.charts.load('current', {'packages':['bar']});
+   google.charts.setOnLoadCallback(drawStuff);
+} 
+    </script>
+		
+		
+		
+		
+		
+		
+		
+</head>
+
+<body>
+    <div >
+        <p><a href="admin.php" class="btn btn-primary">Dashboard</a>
+            | <a href="adminlogout.php" class="btn btn-primary">Logout</a></p>
+        <h1>Update Record</h1>
+       
+            <div class="row">
+                
+				
+				
+				
+				
+				
+				<div class="col-12">
+				
+					<table>
+					<tr>
+					<td>  
+					
+					Name <br> <input name="id" id="txtSearch" class="form-control" value=""  /></td>
+					<td>&nbsp;<br><input name="btnregister" type="submit" class="btn btn-primary" onclick = "fun()" value="Update" /></td>
+					</tr>
+					</table>
+					
+					</div>
+					
+					<table width="100%" border="1" style="border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:center"><strong>Sid</strong></th>
+                    <th style="text-align:center"><strong>Name</strong></th>
+                    <th style="text-align:center"><strong>Php</strong></th>
+					 <th style="text-align:center"><strong>C#</strong></th>
+ <th style="text-align:center"><strong>Java</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $count = 1;
+                $sel_query = "Select * from exam_details ORDER BY Marks;";
+                $result = mysqli_query($con, $sel_query);
+                while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <tr>
+                        <!-- <td align="center"><?php echo $count; ?></td> -->
+                        <td align="center"><?php echo $row["Sid"]; ?></td>
+                        <td align="center"><?php echo $row["Name"]; ?></td>
+                        <td align="center"><?php echo $row["Marks"]; ?></td>
+						<td align="center"><?php echo $row["Marks2"]; ?></td>
+						<td align="center"><?php echo $row["Marks3"]; ?></td>
+                    </tr>
+                <?php $count++;
+                } ?>
+				
+				 
+            </tbody>
+        </table>
+    </div>
+	<br>
+	<div id="top_x_div" style="width: 900px; height: 500px;"></div>
+					
+					
+                
+           
+            </div>
+    </div>
+</body>
+
+</html>

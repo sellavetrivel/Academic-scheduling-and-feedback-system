@@ -1,0 +1,236 @@
+(function () {
+  // Functions
+  function bquiz() {
+    // variable to store the HTML output
+    const output1 = [];
+
+    // for each question...
+    myQues.forEach((recentQues, quesNo) => {
+      // variable to store the list of possible answers
+      const ans = [];
+
+      // and for each available answer...
+      for (l in recentQues.ans) {
+        // ...add an HTML radio button
+        ans.push(
+          `<label>
+                <input type="radio" name="question${quesNo}" value="${l}">
+                ${l} :
+                ${recentQues.ans[l]}
+              </label>`
+        );
+      }
+
+      // add this question and its answers to the output
+      output1.push(
+        `<div class="slide">
+              <div class="question"> ${recentQues.question} </div>
+              <div class="ans"> ${ans.join("")} </div>
+            </div>`
+      );
+    });
+
+    // finally combine our output list into one string of HTML and put it on the page
+    quizContainer.innerHTML = output1.join("");
+  }
+
+  function displayResults() {
+    // gather answer containers from our quiz
+    const answerContainers = quizContainer.querySelectorAll(".ans");
+
+    // keep track of user's answers
+    let numCrt = 0;
+
+    // for each question...
+    myQues.forEach((recentQues, quesNo) => {
+      // find selected answer
+      const answerContainer = answerContainers[quesNo];
+      const selector = `input[name=question${quesNo}]:checked`;
+      const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+      // if answer is correct
+      if (userAnswer === recentQues.correctAnswer) {
+        // add to the number of correct answers
+        numCrt++;
+
+        // color the answers green
+        answerContainers[quesNo].style.color = "lightgreen";
+      }
+      // if answer is wrong or blank
+      else {
+        // color the answers red
+        answerContainers[quesNo].style.color = "red";
+      }
+    });
+
+    // show number of correct answers out of total
+    resultsContainer.innerHTML = `Your Score is ${numCrt} out of ${myQues.length}`;
+    document.cookie = `marks = ${numCrt}`;
+    goBack();
+  }
+
+  function displaySlide(n) {
+    slides[recentSlide].classList.remove("active-slide");
+    slides[n].classList.add("active-slide");
+    recentSlide = n;
+    if (recentSlide === 0) {
+      previousButton.style.display = "none";
+    } else {
+      previousButton.style.display = "inline-block";
+    }
+    if (recentSlide === slides.length - 1) {
+      nextButton.style.display = "none";
+      submitButton.style.display = "inline-block";
+    } else {
+      nextButton.style.display = "inline-block";
+      submitButton.style.display = "none";
+    }
+  }
+
+  function displayNextSlide() {
+    displaySlide(recentSlide + 1);
+  }
+
+  function displayPreviousSlide() {
+    displaySlide(recentSlide - 1);
+  }
+
+  // Variables
+  const quizContainer = document.getElementById("quiz");
+  const resultsContainer = document.getElementById("results");
+  const submitButton = document.getElementById("submit");
+  const myQues = [
+    {
+      question: "Who developed PHP?",
+      ans: {
+        a: "Douglas Crockford",
+        b: "Rasmus Lerdorf",
+        c: "Brendan Eich",
+      },
+      correctAnswer: "b",
+    },
+    {
+      question: "Which protocol does PHP uses for mail transfer?",
+      ans: {
+        a: "TCP",
+        b: "IMAP",
+        c: "SMTP",
+      },
+      correctAnswer: "c",
+    },
+    // {
+      // question: "What is the use of post method in PHP?",
+      // ans: {
+        // a: "To show to data publicly to others",
+        // b: "To show data in query string",
+        // c: "To hide the user entered data",
+        // d: "To decrypt the user entered data",
+      // },
+      // correctAnswer: "c",
+    // },
+    {
+      question: "In PHP, the variable name starts from ?",
+      ans: {
+        a: "!",
+        b: "$",
+        c: "@",
+        d: "&",
+      },
+      correctAnswer: "b",
+    },
+    {
+      question: "Use of echo keyword in PHP ?",
+      ans: {
+        a: "To take inout",
+        b: "To echo the code multiple times ",
+        c: "To display output",
+        d: "None of these",
+      },
+      correctAnswer: "c",
+    },
+    {
+      question: "Which function to used to set cookie in PHP ?",
+      ans: {
+        a: "getcookie()",
+        b: "setcookie()",
+        c: "getsetcookie()",
+        d: "makecookie()",
+      },
+      correctAnswer: "b",
+    },
+    {
+      question: "Eventhough PHP is embedded with HTML, but PHP code only works inside which tag ?",
+      ans: {
+        a: "head",
+        b: "body",
+        c: "php",
+        d: "script",
+      },
+      correctAnswer: "c",
+    },
+    {
+      question: "What is the octal equivalent of 58, 3-bit binary number ?",
+      ans: {
+        a: "0002",
+        b: "0102",
+        c: "1012",
+        d: "0102",
+      },
+      correctAnswer: "d",
+    },
+    {
+      question: "In binary number system a digit ranges from ____",
+      ans: {
+        a: "0 to 15",
+        b: "0 to 7",
+        c: "0 to 1",
+        d: "0 to 9",
+      },
+      correctAnswer: "c",
+    },
+    {
+      question: "Which property is used to set the color of the text in CSS",
+      ans: {
+        a: "colour",
+        b: "color",
+        c: "range",
+        d: "text color",
+      },
+      correctAnswer: "b",
+    },
+    {
+      question: "In reverse polish notation, expression A*B+C*D is written as ",
+      ans: {
+        a: "AB*CD*+",
+        b: "A*BCD+",
+        c: "AB*CD+*",
+        d: "A*BCD+",
+      },
+      correctAnswer: "A",
+    },
+  ];
+
+  // Kick things off
+  bquiz();
+
+  // Pagination
+  const previousButton = document.getElementById("previous");
+  const nextButton = document.getElementById("next");
+  const slides = document.querySelectorAll(".slide");
+  let recentSlide = 0;
+
+  // Show the first slide
+  displaySlide(recentSlide);
+
+  // Event listeners
+  submitButton.addEventListener("click", displayResults);
+  previousButton.addEventListener("click", displayPreviousSlide);
+  nextButton.addEventListener("click", displayNextSlide);
+})();
+
+function goBack() {
+  setTimeout(function () {
+    window.location.href = "quiz1.php";
+  }, 2000);
+}
+
